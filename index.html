@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Untitled</title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+
+<html lang="id">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>VALENTINE</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+
+<style>
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
+
+body{
+
+  height:100vh;
+
+  background:#0b0b0f;
+
+  overflow:hidden;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  color:white;
+
+  perspective:1000px;
+
+  position:relative;
+
+}
+
+/* ambient glow */
+
+body::before{
+
+  content:"";
+
+  position:absolute;
+
+  width:1200px;height:1200px;
+
+  background:radial-gradient(circle, rgba(255,77,166,0.15), transparent 60%);
+
+  animation:moveGlow 20s infinite alternate ease-in-out;
+
+}
+
+@keyframes moveGlow{from{transform:translate(-20%,-20%);}to{transform:translate(20%,20%);}}
+
+/* particles */
+
+.particle{
+
+  position:absolute;
+
+  width:8px;height:8px;
+
+  border-radius:50%;
+
+  background:#ff4da6;
+
+  opacity:0.4;
+
+  animation:floatUp linear forwards;
+
+}
+
+@keyframes floatUp{
+
+  from{transform:translateY(100vh) scale(0.6);opacity:0;}
+
+  20%{opacity:0.5;}
+
+  to{transform:translateY(-20vh) scale(1.2);opacity:0;}
+
+}
+
+/* container */
+
+.card{
+
+  position:relative;
+
+  padding:50px;
+
+  width:500px;
+
+  backdrop-filter:blur(40px);
+
+  background:rgba(255,255,255,0.05);
+
+  border-radius:28px;
+
+  box-shadow:0 0 80px rgba(255,77,166,0.15), inset 0 0 0 1px rgba(212,175,55,0.3);
+
+  text-align:center;
+
+  opacity:0;
+
+  transform:translateY(30px);
+
+  animation:fadeIn 1.5s forwards;
+
+  z-index:2;
+
+}
+
+@keyframes fadeIn{to{opacity:1;transform:translateY(0);}}
+
+h1{font-family:'Playfair Display',serif;font-size:32px;margin-bottom:20px;}
+
+.gold-line{width:60px;height:2px;background:#d4af37;margin:20px auto;opacity:0.7;}
+
+p{line-height:1.7;font-weight:300;opacity:0.9;min-height:60px;}
+
+button{margin-top:25px;background:none;border:none;color:#d4af37;font-size:14px;letter-spacing:2px;cursor:pointer;position:relative;}
+
+button::after{content:"";position:absolute;left:0;bottom:-4px;width:0%;height:1px;background:#d4af37;transition:0.4s;}
+
+button:hover::after{width:100%;}
+
+/* input */
+
+input{margin-top:20px;padding:10px;border:none;border-bottom:1px solid #d4af37;background:none;color:white;text-align:center;outline:none;}
+
+/* envelope */
+
+.envelope{width:120px;height:80px;margin:30px auto 0;border:1px solid rgba(212,175,55,0.4);border-radius:8px;position:relative;cursor:pointer;transform-style: preserve-3d;transition:0.6s;}
+
+.envelope:hover{box-shadow:0 0 30px rgba(255,77,166,0.4);}
+
+.letter{margin-top:25px;opacity:0;transition:1s;}
+
+/* photo heart img */
+
+.photo-heart{
+
+  width:250px;height:250px;
+
+  border-radius:50%;
+
+  object-fit:cover;
+
+  margin:20px auto;
+
+  box-shadow:0 0 40px rgba(255,77,166,0.4);
+
+  opacity:0;
+
+  cursor:pointer;
+
+  transform-style: preserve-3d;
+
+  transition:1s;
+
+}
+
+.photo-heart.show{opacity:1;transform:rotateY(0deg);}
+
+.photo-heart.flipped{transform:rotateY(180deg);}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="card" id="card">
+
+  <h1>Private Access</h1>
+
+  <div class="gold-line"></div>
+
+  <p>tanggalll jadiann kitaa yanggg😉</p>
+
+  <input type="password" id="password" placeholder="•••••">
+
+  <br>
+
+  <button onclick="checkPassword()">ENTER</button>
+
+</div>
+
+<script>
+
+const correctPassword="19126"; // password
+
+const photos=[
+
+  'https://drive.google.com/file/d/1vWm6eCKhlon0AEHGeSYpPl6l8uCSUmS9/view?usp=drivesdk',
+
+  'https://drive.google.com/file/d/10W0GFp6rRhBjRZas2ViANlct4CutqXhg/view?usp=drivesdk',
+
+  'https://drive.google.com/file/d/1nnRy6TAp9x_kZ4RiPGfbzBGeI_yfzfBT/view?usp=drivesdk',
+
+  'https://drive.google.com/file/d/1JcDsh99jsoGPQbsJc9xLdTRMXVR_K1ql/view?usp=drivesdk',
+
+  'https://drive.google.com/file/d/1wYkxy6JXCV1eGqlWop-5uIGA0PPBgoLH/view?usp=drivesdk'
+
+]; // ganti foto pacar
+
+let audioStarted=false;
+
+/* typing effect */
+
+function typeText(element,text,speed=40){
+
+  element.innerHTML="";
+
+  let i=0;
+
+  const interval=setInterval(()=>{
+
+    element.innerHTML+=text.charAt(i);
+
+    i++;
+
+    if(i>=text.length) clearInterval(interval);
+
+  },speed);
+
+}
+
+/* particles */
+
+function createParticle(){
+
+  const p=document.createElement("div");
+
+  p.className="particle";
+
+  p.style.left=Math.random()*100+"vw";
+
+  p.style.animationDuration=(Math.random()*8+8)+"s";
+
+  document.body.appendChild(p);
+
+  setTimeout(()=>p.remove(),15000);
+
+}
+
+setInterval(createParticle,800);
+
+/* password check */
+
+function checkPassword(){
+
+  const input=document.getElementById("password").value;
+
+  if(input===correctPassword){sceneOne();}
+
+  else{
+
+    const btns=document.querySelectorAll('button');
+
+    btns.forEach(b=>b.style.transform=`translateX(${Math.random()*150-75}px)`);
+
+  }
+
+}
+
+/* scene 1 - mini game */
+
+function sceneOne(){
+
+  document.getElementById("card").innerHTML=`
+
+    <h1>jawabbb yangg wajib kalo mau lanjt wleee😛</h1>
+
+    <div class="gold-line"></div>
+
+    <p>Aku mengakui kalo aku jarang mandi</p>
+
+    <button onclick="answer(true)">Iya aku ngaku</button>
+
+    <button onclick="answer(false)">Dihh enggak</button>
+
+  `;
+
+}
+
+/* mini-game */
+
+function answer(correct){
+
+  if(correct){scenePhotos();}
+
+  else{
+
+    const btns=document.querySelectorAll('button');
+
+    btns.forEach(b=>b.style.transform=`translateX(${Math.random()*150-75}px) translateY(${Math.random()*50-25}px)`);
+
+  }
+
+}
+
+/* scene photos */
+
+function scenePhotos(){
+
+  document.getElementById("card").innerHTML=`
+
+    <h1>Mainkan Musik Dulu 🎵</h1>
+
+    <div class="gold-line"></div>
+
+    <button onclick="playAudioAndShowPhotos()">PLAY MUSIC</button>
+
+  `;
+
+}
+
+/* play audio then show photos */
+
+function playAudioAndShowPhotos(){
+
+  if(!audioStarted){
+
+    const audio=document.createElement("audio");
+
+    audio.src="https://drive.google.com/file/d/1v3thOjBaiDKpTfIdt8937fOccm0dDuDH/view?usp=drivesdk"; // placeholder
+
+    audio.autoplay=true;
+
+    audio.loop=true;
+
+    document.body.appendChild(audio);
+
+    audioStarted=true;
+
+  }
+
+  showPhoto(0);
+
+}
+
+/* show photos one by one with img */
+
+function showPhoto(index){
+
+  if(index>=photos.length){showEnvelope(); return;}
+
+  const card=document.getElementById("card");
+
+  card.innerHTML=`
+
+    <h1>Foto ${index+1}</h1>
+
+    <div class="gold-line"></div>
+
+    <img src="${photos[index]}" class="photo-heart show" id="photoHeart">
+
+    <p>Klik foto untuk balik ❤️</p>
+
+  `;
+
+  const photoEl=document.getElementById("photoHeart");
+
+  photoEl.onclick=()=>{photoEl.classList.toggle("flipped");};
+
+  setTimeout(()=>showPhoto(index+1),3000);
+
+}
+
+/* envelope */
+
+function showEnvelope(){
+
+  document.getElementById("card").innerHTML=`
+
+    <h1>Untuk Kita</h1>
+
+    <div class="gold-line"></div>
+
+    <div class="envelope" onclick="openLetter()"></div>
+
+    <div class="letter" id="letterText">
+
+      <p>Aku tidak butuh dunia sempurna, selama ada kamu di dalamnya ❤️</p>
+
+    </div>
+
+  `;
+
+}
+
+/* open letter */
+
+function openLetter(){
+
+  document.getElementById("letterText").style.opacity="1";
+
+}
+
+</script>
+
+</body>
+
+</html>
+    
+  </body>
+  
+</html>
